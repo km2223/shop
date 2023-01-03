@@ -3,7 +3,7 @@ class Product{
   final String id;
   final double price;
   final String description;
-  final String imgeUrl;
+  final String imageUrl;
   
   bool isfavorite;
   Product({
@@ -11,8 +11,8 @@ class Product{
     required this.description,
     required this.price,
     required this.id,
-    required this.imgeUrl,
-    required this.isfavorite
+    required this.imageUrl,
+     this.isfavorite=false
   });
 
 
