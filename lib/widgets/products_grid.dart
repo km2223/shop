@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop/provvider/products.dart';
 import 'package:shop/widgets/product_Item.dart';
 
-import '../models/product.dart';
+import '../provvider/product.dart';
 
 class ProductGrid extends StatelessWidget {
 
@@ -26,6 +26,8 @@ class ProductGrid extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10 
         ), 
-      itemBuilder: ((context, i) => ProductItem(id: products[i].id, imageUrl: products[i].imageUrl, title: products[i].title)));
+      itemBuilder: ((context, i) => ChangeNotifierProvider(create: (BuildContext context)=>products[i],
+      child: ProductItem(),
+      )));
   }
 }
