@@ -51,14 +51,14 @@ final List<Product> loadedProduct=[
         ]
         )
         ),
-        Consumer<Cart>(builder: ((context, cart, _) => Badge(child: IconButton(icon:Icon(Icons.shopping_cart),
+        Consumer<Cart>(builder: ((context, cart, ch) => Badge(child:ch as Widget , value: cart.itemCount.toString(),
+         color: Colors.black)
+        ),
+        child: IconButton(icon:Icon(Icons.shopping_cart),
         onPressed: () {
           
         },
-        ) , value: cart.itemCount.toString(),
-         color: Colors.black)
         ),
-        
         )
 
       ],
