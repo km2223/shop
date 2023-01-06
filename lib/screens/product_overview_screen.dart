@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop/provvider/cart.dart';
 import 'package:shop/provvider/product.dart';
 import 'package:shop/provvider/products.dart';
+import 'package:shop/screens/cart_screen.dart';
 import 'package:shop/widgets/badge.dart';
 import 'package:shop/widgets/product_Item.dart';
 
@@ -56,7 +57,7 @@ final List<Product> loadedProduct=[
         ),
         child: IconButton(icon:Icon(Icons.shopping_cart),
         onPressed: () {
-          
+          Navigator.of(context).pushNamed(CartScreen.nameRoute);
         },
         ),
         )
