@@ -4,6 +4,7 @@ import 'package:shop/provvider/cart.dart';
 import 'package:shop/provvider/product.dart';
 import 'package:shop/provvider/products.dart';
 import 'package:shop/screens/cart_screen.dart';
+import 'package:shop/widgets/app_drawer.dart';
 import 'package:shop/widgets/badge.dart';
 import 'package:shop/widgets/product_Item.dart';
 
@@ -64,7 +65,7 @@ final List<Product> loadedProduct=[
 
       ],
       ),
-      
+      drawer: AppDrawer(),
       body:ProductGrid(_showOnlyFavorite),
     
     );
