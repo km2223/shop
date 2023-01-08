@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/provvider/cart.dart' show Cart;
-import 'package:shop/provvider/orders.dart';
+import 'package:shop/provider/cart.dart' show Cart;
+import 'package:shop/provider/orders.dart';
 import '../widgets/cart_item.dart' ;
 class CartScreen extends StatelessWidget {
    static  const  nameRoute='/cart';
@@ -31,7 +31,7 @@ class CartScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 10,),
                 const Spacer(),
-                Chip(label: Text('\$${cart.totalAmount.toString()}',
+                Chip(label: Text('\$${cart.totalAmount.toStringAsFixed(2)}',
                 style: const TextStyle(
                   
                 ),
@@ -42,8 +42,7 @@ class CartScreen extends StatelessWidget {
                 ),
                 ElevatedButton(child: const Text('ORDER NOW'),
                 onPressed: () {
-/*                   Provider.of<Orders>(context).addOrder(cart.items.values.toList(),
-                   cart.totalAmount); */
+                  //Provider.of<Orders>(context).addOrder(cart.items.values.toList(), cart.totalAmount); 
                    cart.clear();
                 },)
               ],
