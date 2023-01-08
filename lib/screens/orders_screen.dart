@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop/provider/orders.dart' show Orders;
 import 'package:shop/widgets/orders_item.dart';
 
-class OrdersScren extends StatelessWidget {
+class OrdersScreen extends StatelessWidget {
     static const routeName='/orders';
 
 
