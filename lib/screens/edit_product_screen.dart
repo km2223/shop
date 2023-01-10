@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/provider/product.dart';
+import 'package:shop/provider/products.dart';
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({super.key});
   static const routeName='/edit-product';
@@ -31,15 +33,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.initState();
   }
      void _saveForm(){
+      final isvalde= _form.currentState!.validate();
+      if(!isvalde)
+      {return;}
      _form.currentState!.save();
-     print(_EditProduct.title);
-     print(_EditProduct.description);
-     print(_EditProduct.price);
-     print(_EditProduct.imageUrl);
+      Provider.of<Products>(context,listen: false).addProduct(_EditProduct);
+      Navigator.pop(context);
+
+ 
 
     }
   void updateImageUrl(){
     if(! _imageUrlFocesNode.hasFocus){
+      if(_imageUrlController.text.isEmpty
+      ||!_imageUrlController.text.startsWith('http')
+      &&!_imageUrlController.text.startsWith('https')
+      ||!_imageUrlController.text.endsWith('jpg')
+      ||!_imageUrlController.text.endsWith('jpeg')||
+      !_imageUrlController.text.endsWith('png'))
+      {
+        return ;
+      }
       setState(() {
         
       });
@@ -66,15 +80,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
               FocusScope.of(context).requestFocus(_priceFocus); 
             
             },
+                        validator: (value) {
+              if(value!.isEmpty){
+                return 'Please Provide a value ';
+              }
+              return null;
+              
+            },
             onSaved: (newValue) {
               _EditProduct=Product(title:newValue.toString() , description: _EditProduct.description, price: _EditProduct.price, id: null.toString(), imageUrl: _EditProduct.imageUrl);
             },
+
           ),
                     TextFormField(
             decoration: const InputDecoration(labelText: 'price'),
             textInputAction: TextInputAction.next,
             keyboardType:TextInputType.number,
             focusNode: _priceFocus,
+            validator: (value) {
+              if(value!.isEmpty){
+                return 'Please Enter The Price.';
+              }
+              if(double.tryParse(value)==null){
+                return 'Please Enter a Valid number.';
+              }
+              if(double.tryParse(value)!<= 0){
+                return 'Please Enter Number greater than Zero. ';
+              }
+              return null;
+            },
             onFieldSubmitted: (_) {
               FocusScope.of(context).requestFocus(_descriptionFoucs);
             },
@@ -89,6 +123,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
             keyboardType:TextInputType.multiline,
             maxLines: 3,
             focusNode: _descriptionFoucs,
+            validator: (value) {
+              if(value!.isEmpty){
+                return 'Please Enter The Description';
+
+              }
+              if(value.length<10){
+                return 'Please Enter More than 10 characters';
+              }
+            },
               onSaved: (newValue) {
               _EditProduct=Product(title:_EditProduct.title , description: newValue.toString(), price: _EditProduct.price, id: null.toString(), imageUrl: _EditProduct.imageUrl);
             },
@@ -103,7 +146,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
               height: 100,
               margin: const EdgeInsets.only(top: 8,right: 10),
               decoration:BoxDecoration(border:Border.all(width: 1,color:Colors.grey)),
-              child: _imageUrlController.text.isEmpty?Text('Eter Url'):FittedBox(child:Image.network(_imageUrlController.text,fit:BoxFit.cover,),),
+              child: _imageUrlController.text.isEmpty?Text('Enter Url'):FittedBox(child:Image.network(_imageUrlController.text,fit:BoxFit.cover,),),
             ),
             Expanded(
               child: TextFormField(decoration:const InputDecoration(labelText: 'ImageUrl'),
@@ -111,6 +154,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
               textInputAction:TextInputAction.done,
               controller:_imageUrlController,
               focusNode: _imageUrlFocesNode,
+              
                             onSaved: (newValue) {
               _EditProduct=Product(title:_EditProduct.title , description:_EditProduct.description, price: _EditProduct.price, id: null.toString(), imageUrl: newValue.toString());
             },
