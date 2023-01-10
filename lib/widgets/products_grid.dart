@@ -19,7 +19,7 @@ ProductGrid(this.showFavs);
     return GridView.builder(
       padding: EdgeInsets.all(10.0),
       itemCount: products.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount:2,
         childAspectRatio: 3/2,
         crossAxisSpacing: 10,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop/provider/product.dart';
 
 class Products with ChangeNotifier{
-  final List<Product>_items=[
+   final List<Product>_items=[
         Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -55,6 +55,20 @@ class Products with ChangeNotifier{
     id: DateTime.now().toString(),
     imageUrl:prod. imageUrl);
     _items.add(newProduct);
+  notifyListeners();
+ }
+ void updateProduct(String id,Product newProduct){
+final productIndx=_items.indexWhere((element) => element.id==id);
+if (productIndx>=0) {
+  _items[productIndx]=newProduct;
+  notifyListeners();
+  
+} else {
+  print("object");
+}
+ }
+ void deletProduct(String id){
+  _items.removeWhere((element) => element.id==id);
   notifyListeners();
  }
 }
