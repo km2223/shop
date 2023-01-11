@@ -3,7 +3,7 @@ import 'package:shop/provider/product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 class Products with ChangeNotifier{
-   final List<Product>_items=[
+    List<Product>_items=[
         Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -50,8 +50,31 @@ class Products with ChangeNotifier{
  } 
 
 
+Future<void>fetchAndSetProduct () async{
+    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json');
+try{
+final response= await http.get(url);
+final extractData=json.decode(response.body) as Map<String,dynamic>;
+final List<Product>loadedProduct=[];
+extractData.forEach((prodId, prodData) { 
+  loadedProduct.add(Product(
+    title: prodData['title'],
+     description: prodData['description'],
+      price: prodData['price'], id: prodId,
+       imageUrl: prodData['imageUrl'],
+       isfavorite: prodData['isFavorite']));
+});
+_items=loadedProduct;
+notifyListeners();
+}
+catch(error){
+  throw error;
+
+}
+}
+
   Future<void> addProduct(Product product) async {
-    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products');
+    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json');
     try{
     final response= await http
         .post(

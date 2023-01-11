@@ -12,12 +12,39 @@ import '../widgets/products_grid.dart';
 
 enum FilterValue{Favorite,All}
 class ProductOverviewScreen extends StatefulWidget {
+  const ProductOverviewScreen({super.key});
+
   @override
   State<ProductOverviewScreen> createState() => _ProductOverviewScreenState();
 }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavorite=false;
+  var _isInit=true;
+  var _isLoaded=false;
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+      setState(() {
+        _isLoaded=true;
+      });
+ Provider.of<Products>(context).fetchAndSetProduct().then((_) {
+
+setState(() {
+  _isLoaded=false;
+  
+}); });
+    }
+    _isInit=false;
+    super.didChangeDependencies();
+  }
+@override
+  void initState() {
+/*     Future.delayed(Duration.zero).then((_) {
+      Provider.of<Products>(context).fetchAndSetProduct();
+    }); */
+    super.initState();
+  }
 
 final List<Product> loadedProduct=[
   
@@ -29,7 +56,7 @@ final List<Product> loadedProduct=[
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title:Text('MyShop'),
+      appBar: AppBar(title:const Text('MyShop'),
       actions: [
         PopupMenuButton(onSelected: ( FilterValue selectedValue) {
           setState(() {
@@ -45,18 +72,18 @@ final List<Product> loadedProduct=[
 
         },
 
-          icon:Icon(Icons.more_vert),itemBuilder: ((context) => [
-          PopupMenuItem(child: Text('only favorite'),value: FilterValue.Favorite,
+          icon:const Icon(Icons.more_vert),itemBuilder: ((context) => [
+          const PopupMenuItem(value: FilterValue.Favorite,child: Text('only favorite'),
           ),
-          PopupMenuItem(child: Text('show all'),value:FilterValue.All,
+          const PopupMenuItem(value:FilterValue.All,child: Text('show all'),
           )
         ]
         )
         ),
-        Consumer<Cart>(builder: ((context, cart, ch) => Badge(child:ch as Widget , value: cart.itemCount.toString(),
-         color: Colors.black)
+        Consumer<Cart>(builder: ((context, cart, ch) => Badge(value: cart.itemCount.toString(),
+         color: Colors.black, child:ch as Widget)
         ),
-        child: IconButton(icon:Icon(Icons.shopping_cart),
+        child: IconButton(icon:const Icon(Icons.shopping_cart),
         onPressed: () {
           Navigator.of(context).pushNamed(CartScreen.nameRoute);
         },
@@ -65,8 +92,8 @@ final List<Product> loadedProduct=[
 
       ],
       ),
-      drawer: AppDrawer(),
-      body:ProductGrid(_showOnlyFavorite),
+      drawer: const AppDrawer(),
+      body:_isLoaded ? Center(child: CircularProgressIndicator(),) :ProductGrid(_showOnlyFavorite),
     
     );
   }
