@@ -87,21 +87,36 @@ setState(() {
   _isLoaded=true;
 });
   if (isNew) {
-    Provider.of<Products>(context, listen: false).addProduct(_EditProduct).then((_) {
-  Navigator.of(context).pop();
+    Provider.of<Products>(context, listen: false).addProduct(_EditProduct).catchError((error) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title: const Text('An error occurred!'),
+                content: const Text('Something went wrong.'),
+                actions: [
+                  TextButton(child: Text('Okay'), onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },)
+                ],
+              ),
+        );
+      }).then((_) {
 setState(() {
   _isLoaded=false;
 });
+                    Navigator.of(context).pop();
+
     });
   } else {
     Provider.of<Products>(context, listen: false)
       .updateProduct(_EditProduct.id, _EditProduct);
-  Navigator.of(context).pop();
   setState(() {
   _isLoaded=false;
 });
+  Navigator.of(context).pop();
 
   }
+
 }
 /* @override
   void didChangeDependencies() {
