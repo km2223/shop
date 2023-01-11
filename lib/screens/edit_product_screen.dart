@@ -16,7 +16,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlController=TextEditingController();
   final _imageUrlFocesNode=FocusNode();
   final _form=GlobalKey<FormState>();
-  var _EditProduct=Product(title: '', description: '', price: 0, id: null.toString(), imageUrl: '');
+  var _editProduct=Product(title: '', description: '', price: 0, id: null.toString(), imageUrl: '');
 
   @override
   void dispose() {
@@ -58,26 +58,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
       'imageUrl':''
     };
     bool isNew = true;
-    void didChangeDependencies() {
+    @override
+      void didChangeDependencies() {
   if (_isInit) {
     final productId = ModalRoute.of(context)!.settings.arguments;
     if (productId != null) {
       isNew = false;
-      _EditProduct = Provider.of<Products>(context, listen: false)
+      _editProduct = Provider.of<Products>(context, listen: false)
         .findById(productId.toString());
       _initValue = {
-        'title': _EditProduct.title,
-        'description': _EditProduct.description,
-        'price': _EditProduct.price.toString(),
+        'title': _editProduct.title,
+        'description': _editProduct.description,
+        'price': _editProduct.price.toString(),
         'imageUrl': '',
       };
-      _imageUrlController.text = _EditProduct.imageUrl;
+      _imageUrlController.text = _editProduct.imageUrl;
     }
   }
   _isInit = false;
   super.didChangeDependencies();
 }
-void _saveForm() {
+void _saveForm()  async{
   final isValid = _form.currentState!.validate();
   if (!isValid) {
     return;
@@ -87,29 +88,36 @@ setState(() {
   _isLoaded=true;
 });
   if (isNew) {
-    Provider.of<Products>(context, listen: false).addProduct(_EditProduct).catchError((error) {
-        return showDialog(
+    try{
+ await Provider.of<Products>(context, listen: false).addProduct(_editProduct);
+    }
+
+   catch(error) {
+        await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
                 title: const Text('An error occurred!'),
                 content: const Text('Something went wrong.'),
                 actions: [
-                  TextButton(child: Text('Okay'), onPressed: () {
+                  TextButton(child: const Text('Okay'), onPressed: () {
                     Navigator.of(ctx).pop();
                   },)
                 ],
               ),
         );
-      }).then((_) {
+      }
+      finally{
 setState(() {
   _isLoaded=false;
 });
                     Navigator.of(context).pop();
+      }
 
-    });
+
+    
   } else {
     Provider.of<Products>(context, listen: false)
-      .updateProduct(_EditProduct.id, _EditProduct);
+      .updateProduct(_editProduct.id, _editProduct);
   setState(() {
   _isLoaded=false;
 });
@@ -165,7 +173,7 @@ setState(() {
         IconButton(onPressed:_saveForm , icon:const Icon(Icons.save))
 
       ],),
-      body:_isLoaded?Center(child: CircularProgressIndicator(),): Padding(
+      body:_isLoaded?const Center(child: CircularProgressIndicator(),): Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
           key: _form,
@@ -186,13 +194,13 @@ setState(() {
               
             },
             onSaved: (newValue) {
-              _EditProduct=Product(
+              _editProduct=Product(
                 title:newValue.toString() , 
-                description: _EditProduct.description,
-                 price: _EditProduct.price, 
-                  id: _EditProduct.id,
-                  isfavorite:_EditProduct.isfavorite,
-                  imageUrl: _EditProduct.imageUrl);
+                description: _editProduct.description,
+                 price: _editProduct.price, 
+                  id: _editProduct.id,
+                  isfavorite:_editProduct.isfavorite,
+                  imageUrl: _editProduct.imageUrl);
             },
 
           ),
@@ -218,13 +226,13 @@ setState(() {
               FocusScope.of(context).requestFocus(_descriptionFoucs);
             },
                 onSaved: (newValue) {
-              _EditProduct=Product(
-                title:_EditProduct.title , 
-                description: _EditProduct.description, 
+              _editProduct=Product(
+                title:_editProduct.title , 
+                description: _editProduct.description, 
                 price: double.parse(newValue.toString()), 
-                id: _EditProduct.id,
-                isfavorite:_EditProduct.isfavorite,
-                 imageUrl: _EditProduct.imageUrl);
+                id: _editProduct.id,
+                isfavorite:_editProduct.isfavorite,
+                 imageUrl: _editProduct.imageUrl);
             
             },
             
@@ -243,15 +251,16 @@ setState(() {
               if(value.length<10){
                 return 'Please Enter More than 10 characters';
               }
+              return null;
             },
               onSaved: (newValue) {
-              _EditProduct=Product(
-                title:_EditProduct.title ,
+              _editProduct=Product(
+                title:_editProduct.title ,
                  description: newValue.toString(),
-                  price: _EditProduct.price, 
-                   id: _EditProduct.id,
-                   isfavorite:_EditProduct.isfavorite,
-                    imageUrl: _EditProduct.imageUrl);
+                  price: _editProduct.price, 
+                   id: _editProduct.id,
+                   isfavorite:_editProduct.isfavorite,
+                    imageUrl: _editProduct.imageUrl);
             },
            
           ),
@@ -264,7 +273,7 @@ setState(() {
               height: 100,
               margin: const EdgeInsets.only(top: 8,right: 10),
               decoration:BoxDecoration(border:Border.all(width: 1,color:Colors.grey)),
-              child: _imageUrlController.text.isEmpty?Text('Enter Url'):FittedBox(child:Image.network(_imageUrlController.text,fit:BoxFit.cover,),),
+              child: _imageUrlController.text.isEmpty?const Text('Enter Url'):FittedBox(child:Image.network(_imageUrlController.text,fit:BoxFit.cover,),),
             ),
             Expanded(
               child: TextFormField(
@@ -275,12 +284,12 @@ setState(() {
               focusNode: _imageUrlFocesNode,
               
                             onSaved: (newValue) {
-              _EditProduct=Product(
-                title:_EditProduct.title ,
-                 description:_EditProduct.description,
-                  price: _EditProduct.price,
-                   id: _EditProduct.id,
-                  isfavorite:_EditProduct.isfavorite,
+              _editProduct=Product(
+                title:_editProduct.title ,
+                 description:_editProduct.description,
+                  price: _editProduct.price,
+                   id: _editProduct.id,
+                  isfavorite:_editProduct.isfavorite,
                    imageUrl: newValue.toString());
             },
               onFieldSubmitted:(value) {
