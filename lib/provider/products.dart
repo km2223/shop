@@ -47,10 +47,71 @@ class Products with ChangeNotifier{
   }
  Product findById(String id){
   return _items.firstWhere((prod) => prod.id==id);
- }
- Future< void >addProduct(Product prod) async {
-  final  url= Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json');
- return await http.post(url,body:json.encode({
+ }  Future<void> addProduct(Product product) async {
+    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json');
+     await http
+        .post(
+      url,
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'price': product.price,
+        'isFavorite': product.isfavorite,
+      }),
+    )
+        .then((response) {
+      final newProduct = Product(
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newProduct);
+      // _items.insert(0, newProduct); // at the start of the list
+      notifyListeners();
+    }).catchError((error) {
+      print(error);
+      throw error;
+    });
+  }
+
+
+ /* Future<void> addProduct(Product product)  {
+    final url =  Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products');
+    return  http
+        .post(
+      url,
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'price': product.price,
+        'isFavorite': product.isfavorite,
+      }),
+    )
+        .then((response) {
+      final newProduct = Product(
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newProduct);
+      // _items.insert(0, newProduct); // at the start of the list
+      notifyListeners();
+    });
+  }
+ 
+ .catchError((error) {
+      print(error);
+      throw error;
+    })
+ Future< void >addProduct(Product prod)  {
+  final  url= Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products');
+ return  http.post(url,body:json.encode({
     'title':prod.title,
     'description':prod.description,
     'price':prod.price,
@@ -65,9 +126,12 @@ class Products with ChangeNotifier{
     id:json.decode(value.body)['name'],
     imageUrl:prod. imageUrl);
     _items.add(newProduct);
-  notifyListeners();});
+  notifyListeners();}).catchError((error){
+    print(error);
+    throw error;
+  });
   
- }
+ }*/
  void updateProduct(String id,Product newProduct){
 final productIndx=_items.indexWhere((element) => element.id==id);
 if (productIndx>=0) {
