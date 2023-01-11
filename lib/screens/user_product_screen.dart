@@ -6,6 +6,10 @@ import 'package:shop/widgets/user_product_item.dart';
 
 class UserProduct extends StatelessWidget {
 static const routeName='/user-product';
+Future<void>_refreshProduct(BuildContext context)async {
+  await Provider.of<Products>(context,listen: false).fetchAndSetProduct();
+
+}
   @override
   Widget build(BuildContext context) {
     final productdata= Provider.of<Products>(context);
@@ -17,14 +21,17 @@ static const routeName='/user-product';
         }), icon: const Icon(Icons.add))
       ],
       ),
-      body: Padding(padding: const EdgeInsets.all(10),
-      child: ListView.builder(itemBuilder: ((context, index) => Column(
-        children: [
-          UserProductItem(id: productdata.items[index].id, title: productdata.items[index].title, imageUrl: productdata.items[index].imageUrl),
-          const Divider()
-        ],
-      )
-      ),itemCount:productdata.items.length),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProduct(context),
+        child: Padding(padding: const EdgeInsets.all(10),
+        child: ListView.builder(itemBuilder: ((context, index) => Column(
+          children: [
+            UserProductItem(id: productdata.items[index].id, title: productdata.items[index].title, imageUrl: productdata.items[index].imageUrl),
+            const Divider()
+          ],
+        )
+        ),itemCount:productdata.items.length),
+        ),
       ),
       
     );
