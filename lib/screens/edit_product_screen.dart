@@ -50,6 +50,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
     } */
     var _isInit=true;
+    var _isLoaded=false;
     var _initValue={
       'title':'',
       'price':'',
@@ -82,14 +83,25 @@ void _saveForm() {
     return;
   }
   _form.currentState!.save();
-
+setState(() {
+  _isLoaded=true;
+});
   if (isNew) {
-    Provider.of<Products>(context, listen: false).addProduct(_EditProduct);
+    Provider.of<Products>(context, listen: false).addProduct(_EditProduct).then((_) {
+  Navigator.of(context).pop();
+setState(() {
+  _isLoaded=false;
+});
+    });
   } else {
     Provider.of<Products>(context, listen: false)
       .updateProduct(_EditProduct.id, _EditProduct);
-  }
   Navigator.of(context).pop();
+  setState(() {
+  _isLoaded=false;
+});
+
+  }
 }
 /* @override
   void didChangeDependencies() {
@@ -138,7 +150,7 @@ void _saveForm() {
         IconButton(onPressed:_saveForm , icon:const Icon(Icons.save))
 
       ],),
-      body:Padding(
+      body:_isLoaded?Center(child: CircularProgressIndicator(),): Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
           key: _form,
