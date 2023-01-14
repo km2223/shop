@@ -10,7 +10,7 @@ class ProductDetailScreen extends StatelessWidget {
   ProductDetailScreen({required this.title});
 
  */
-static const routeName='product_detail';
+static const routeName='/product_detail';
   @override
   Widget build(BuildContext context) {
    final productId= ModalRoute.of(context)?.settings.arguments as String;

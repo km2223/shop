@@ -22,14 +22,14 @@ class CartItem extends StatelessWidget {
     return Dismissible(
       key: ValueKey(id),
       background: Container(color:Theme.of(context).errorColor,
-      child: Icon(Icons.delete,
+      alignment: Alignment.centerRight,
+        margin:const EdgeInsets.symmetric(horizontal: 15,vertical: 4),
+        padding: const EdgeInsets.only(right: 20),
+      child:  Icon(Icons.delete,
       color: Colors.white,
       size: 40,
       
       ),
-      alignment: Alignment.centerRight,
-        margin:EdgeInsets.symmetric(horizontal: 15,vertical: 4),
-        padding: EdgeInsets.only(right: 20),
       ),
       onDismissed: (direction) {
         Provider.of<Cart>(context,listen: false).removeItem(productId);
@@ -39,16 +39,16 @@ class CartItem extends StatelessWidget {
         return showDialog(
           context: context,
            builder: ((context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content:Text('Do you want to remove the item from the cart ') ,
+            title: const Text('Are you sure?'),
+            content:const Text('Do you want to remove the item from the cart ') ,
                  actions: [
         TextButton(
-          child: Text("Yes"),
+          child: const Text("Yes"),
           onPressed: () {
           Navigator.of(context).pop(true);
         },),
                 TextButton(
-                  child: Text("No"),
+                  child: const Text("No"),
                   onPressed: () {
           Navigator.of(context).pop(false);
           
@@ -61,8 +61,8 @@ class CartItem extends StatelessWidget {
             );
       },
       child: Card(
-        margin:EdgeInsets.symmetric(horizontal: 15,vertical: 4),
-        child: Padding(padding: EdgeInsets.all(8),
+        margin:const EdgeInsets.symmetric(horizontal: 15,vertical: 4),
+        child: Padding(padding: const EdgeInsets.all(8),
         child: ListTile(
           title: Text(title),
           subtitle: Text('Total: \$${(price*quantity)}'),

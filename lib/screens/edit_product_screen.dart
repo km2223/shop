@@ -106,25 +106,26 @@ setState(() {
               ),
         );
       }
-      finally{
+/*       finally{
 setState(() {
   _isLoaded=false;
 });
                     Navigator.of(context).pop();
-      }
+      } */
 
 
     
   } else {
-    Provider.of<Products>(context, listen: false)
+     await Provider.of<Products>(context, listen: false)
       .updateProduct(_editProduct.id, _editProduct);
-  setState(() {
-  _isLoaded=false;
-});
-  Navigator.of(context).pop();
+
 
   }
+  setState(() {
+  _isLoaded=false;
+  Navigator.of(context).pop();
 
+});
 }
 /* @override
   void didChangeDependencies() {

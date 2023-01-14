@@ -15,14 +15,18 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) =>Products() ,),
-      ChangeNotifierProvider(create: (context) =>Cart() ,),
-      ChangeNotifierProvider(create: (context) =>Orders() ,)
-
-
-
-    ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: Products(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Cart(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Orders(),
+        ),
+      ],
     
       child: MaterialApp(
         title: 'MyShop',
@@ -35,7 +39,7 @@ class MyApp extends StatelessWidget {
         home: ProductOverviewScreen(),
         routes: {
           ProductDetailScreen.routeName:(context) => ProductDetailScreen(),
-          CartScreen.nameRoute:(context) => CartScreen(),
+          CartScreen.routName:(context) => CartScreen(),
           OrdersScreen.routeName:(context) => OrdersScreen(),
           UserProduct.routeName:(context) => UserProduct(),
           EditProductScreen.routeName:(context) => EditProductScreen()

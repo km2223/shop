@@ -21,15 +21,7 @@ class ProductItem extends StatelessWidget {
 
     return  ClipRRect(
         borderRadius: BorderRadius.circular(10 ),
-        child:  GridTile( child:GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed( ProductDetailScreen.routeName,arguments:product.id);
-          },
-          child: Image.network(product.imageUrl,
-          fit:BoxFit.cover,
-          ),
-        ) ,
-        footer: GridTileBar(
+        child:  GridTile( footer: GridTileBar(
           title:Text(product.title,
           textAlign: TextAlign.center,),
           backgroundColor:Colors.black87,
@@ -39,13 +31,13 @@ class ProductItem extends StatelessWidget {
              onPressed: () { product.taggleFavoritestatus();  },),
             
           ),
-           trailing: IconButton(icon: Icon(Icons.shopping_cart), 
+           trailing: IconButton(icon: const Icon(Icons.shopping_cart), 
            onPressed: () { 
             cart.addItem(product.id, product. price,product.title);
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  content: Text('add item to cart'),
-  duration: Duration(seconds: 2),
+  content: const Text('add item to cart'),
+  duration: const Duration(seconds: 2),
   action: SnackBarAction(label: ('undo'), onPressed: (() {
     cart.removeItem(product.id);
   })),
@@ -56,7 +48,14 @@ ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             },
           color: Theme.of(context).accentColor,
            ),
-           ),
+           ), child:GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed( ProductDetailScreen.routeName,arguments:product.id);
+          },
+          child: Image.network(product.imageUrl,
+          fit:BoxFit.cover,
+          ),
+        ) ,
         ),
       );
       

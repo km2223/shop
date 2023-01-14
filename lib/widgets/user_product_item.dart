@@ -11,7 +11,7 @@ final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
-  
+  final snackBar=  ScaffoldMessenger.of(context);
     return ListTile(
       title:Text(title),
       leading: CircleAvatar(
@@ -21,15 +21,30 @@ final String imageUrl;
         width: 100,
         child: Row(
           children: [
-            IconButton(onPressed: (() {
+            IconButton(
+              onPressed: (() {
               Navigator.of(context).pushNamed(EditProductScreen.routeName,arguments: id);
               
-            }), icon: const Icon(Icons.edit),color:Theme.of(context).primaryColor,),
-                    
-                    
-                      IconButton(onPressed: (() {
-               Provider.of<Products>(context,listen: false).deletProduct(id);
-            }), icon: const Icon(Icons.delete),color:Theme.of(context).errorColor,)
+            }), 
+            icon: const Icon(Icons.edit),color:Theme.of(context).primaryColor,),
+    
+            IconButton(
+              onPressed: (()async {
+                try{
+               await Provider.of<Products>(context,listen: false).deleteProduct(id);
+
+                }
+                catch(error){
+                snackBar.showSnackBar(const SnackBar(
+  content: Text('Deleteing Faild!',textAlign:TextAlign.center,),
+  duration: Duration(seconds: 2),
+  
+)
+);
+
+                }
+            }),
+             icon: const Icon(Icons.delete),color:Theme.of(context).errorColor,)
           ],
         ),
       ),

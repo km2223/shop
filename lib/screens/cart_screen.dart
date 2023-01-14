@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/provider/cart.dart' show Cart;
+import '../provider/cart.dart' show Cart;
 import 'package:shop/provider/orders.dart';
 import '../widgets/cart_item.dart' ;
+import '../screens/order_button.dart';
 class CartScreen extends StatelessWidget {
-   static  const  nameRoute='/cart';
+   static  const  routName='/cart';
 
   const CartScreen({super.key});
 
@@ -40,11 +41,7 @@ class CartScreen extends StatelessWidget {
                 backgroundColor:Theme.of(context).primaryColor,
                 
                 ),
-                ElevatedButton(child: const Text('ORDER NOW'),
-                onPressed: () {
-                  //Provider.of<Orders>(context).addOrder(cart.items.values.toList(), cart.totalAmount); 
-                   cart.clear();
-                },)
+                OrderButton(cart: cart)
               ],
             ),
             ),
@@ -62,3 +59,26 @@ class CartScreen extends StatelessWidget {
     );
   }
 }
+/*
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  @override
+  Widget build(BuildContext context) {
+    
+    return ElevatedButton(onPressed: widget.cart.totalAmount<=0? null:() {
+     Provider.of<Orders>(context).addOrder(cart.items.values.toList(), cart.totalAmount); 
+       //widget.cart.clear();
+    },child: const Text('ORDER NOW'),);
+  }
+}*/

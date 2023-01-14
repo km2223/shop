@@ -85,7 +85,7 @@ final List<Product> loadedProduct=[
         ),
         child: IconButton(icon:const Icon(Icons.shopping_cart),
         onPressed: () {
-          Navigator.of(context).pushNamed(CartScreen.nameRoute);
+          Navigator.of(context).pushNamed(CartScreen.routName);
         },
         ),
         )
@@ -93,7 +93,7 @@ final List<Product> loadedProduct=[
       ],
       ),
       drawer: const AppDrawer(),
-      body:_isLoaded ? Center(child: CircularProgressIndicator(),) :ProductGrid(_showOnlyFavorite),
+      body:_isLoaded ? const Center(child: CircularProgressIndicator(),) :ProductGrid(_showOnlyFavorite),
     
     );
   }

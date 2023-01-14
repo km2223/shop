@@ -17,7 +17,7 @@ ProductGrid(this.showFavs);
   final products=showFavs?productsData.favoriteItems: productsData.items;
   
     return GridView.builder(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       itemCount: products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount:2,

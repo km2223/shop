@@ -14,9 +14,10 @@ OrdersItem(this.orders);
 
 class _OrdersItemState extends State<OrdersItem> {
   var _expand=false;
+  @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
@@ -30,9 +31,9 @@ class _OrdersItemState extends State<OrdersItem> {
               });
             })),
           ),
-          if(_expand) Container(height: min(widget.orders.product.length*20 +100, 180),
+          if(_expand) Container(height: min(widget.orders.products.length*20 +100, 180),
           child: ListView(
-            children: widget.orders.product.map((e) => Row(
+            children: widget.orders.products.map((e) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween ,
               children: [
                 Text(e.title,
