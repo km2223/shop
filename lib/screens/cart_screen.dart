@@ -7,7 +7,6 @@ import '../screens/order_button.dart';
 class CartScreen extends StatelessWidget {
    static  const  routName='/cart';
 
-  const CartScreen({super.key});
 
 
   @override

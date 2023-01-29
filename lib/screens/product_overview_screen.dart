@@ -12,7 +12,6 @@ import '../widgets/products_grid.dart';
 
 enum FilterValue{Favorite,All}
 class ProductOverviewScreen extends StatefulWidget {
-  const ProductOverviewScreen({super.key});
 
   @override
   State<ProductOverviewScreen> createState() => _ProductOverviewScreenState();
@@ -28,7 +27,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       setState(() {
         _isLoaded=true;
       });
- Provider.of<Products>(context).fetchAndSetProduct().then((_) {
+ Provider.of<Products>(context,).fetchAndSetProduct().then((_) {
 
 setState(() {
   _isLoaded=false;
@@ -40,17 +39,13 @@ setState(() {
   }
 @override
   void initState() {
-/*     Future.delayed(Duration.zero).then((_) {
-      Provider.of<Products>(context).fetchAndSetProduct();
-    }); */
+   /* Future.delayed(Duration.zero).then((_) {
+      Provider.of<Products>(context,listen: false).fetchAndSetProduct();
+    }); */ 
     super.initState();
   }
 
-final List<Product> loadedProduct=[
-  
 
-  
-];
 
   @override
   Widget build(BuildContext context) {

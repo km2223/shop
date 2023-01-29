@@ -19,18 +19,19 @@ class Product with ChangeNotifier{
     required this.imageUrl,
      this.isfavorite=false
   });
+   
   void _setFavValue(bool newState){
     isfavorite=newState;
 notifyListeners();
   }
- Future< void >taggleFavoritestatus()async{
+ Future< void >taggleFavoritestatus(String token,String userId)async{
   final oldState=isfavorite;
     isfavorite=!isfavorite;
   notifyListeners();
-    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products/$id.json');
+    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token');
 
   try{
-    final response= await http.patch(url,body:json.encode({
+    final response= await http.put(url,body:json.encode({
       'isFavorite':isfavorite
     }));
     if(response.statusCode>=400){

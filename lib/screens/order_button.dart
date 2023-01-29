@@ -23,11 +23,11 @@ class _OrderButtonState extends State<OrderButton> {
   Widget build(BuildContext context) {
     final cart=Provider.of<Cart>(context);
     
-    return ElevatedButton(onPressed:(widget. cart.totalAmount<=0||_isloading)? null:()async {
+    return ElevatedButton(onPressed:( cart.totalAmount<=0||_isloading)? null:()async {
       setState(() {
         _isloading=true;
       });
-    await  Provider.of<Orders>(context,listen: false).addOrder(widget. cart.items.values.toList(),widget.cart.totalAmount); 
+    await  Provider.of<Orders>(context,listen: false).addOrder( cart.items.values.toList(),cart.totalAmount); 
     setState(() {
       _isloading=false;
     });

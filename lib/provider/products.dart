@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shop/provider/product.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +9,7 @@ import 'dart:convert';
 import '../models/http_exception.dart';
 class Products with ChangeNotifier{
     List<Product>_items=[
-        Product(
+      /*    Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
@@ -38,8 +40,12 @@ class Products with ChangeNotifier{
       price: 49.99,
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
+    ),  */
   ];
+   String? authToken;
+   String ?userId;
+  Products(this.authToken,this._items,this.userId);
+
   List<Product>get items{
 
     return [..._items];
@@ -53,41 +59,57 @@ class Products with ChangeNotifier{
  } 
 
 
-Future<void>fetchAndSetProduct () async{
-    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json');
-try{
+Future<void>fetchAndSetProduct ([bool filterByUser =false]) async{
+  final filterString=filterByUser?'orderBy="creatorId"&equalTo=$userId':'';
+  //final url = Uri.https('shopapp-99ffc-default-rtdb.firebaseio.com', '/Products.json', {'auth' : '$authToken'});
+   var url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json?auth=$authToken&$filterString');
+    
+//try{
 final response= await http.get(url);
+
+//Map<String, dynamic> extractData = json.decode(response.body) as Map<String, dynamic>;
 final extractData=json.decode(response.body) as Map<String,dynamic>;
+
+if (extractData==null){return;}
+     url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken');
+
+final favoriteResponse= await http.get(url);
+final favoriteData=json.decode(favoriteResponse.body) ;
 final List<Product>loadedProduct=[];
 extractData.forEach((prodId, prodData) { 
   loadedProduct.add(Product(
-    title: prodData['title'],
+      id: prodId,
+    title: prodData["title"],
      description: prodData['description'],
-      price: prodData['price'], id: prodId,
+      price: prodData['price'], 
        imageUrl: prodData['imageUrl'],
-       isfavorite: prodData['isFavorite']));
+       isfavorite: favoriteData == null || favoriteData[prodId] == null
+              ? false
+              : favoriteData[prodId]['isFavorite'] ?? false,
+       )
+       );
 });
 _items=loadedProduct;
 notifyListeners();
-}
-catch(error){
-  rethrow;
+//}
+/*  catch(error){
+  
+ //HttpException(error.toString());
+ rethrow;
 
-}
+}  */
 }
 
   Future<void> addProduct(Product product) async {
-    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json');
+    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products.json?auth=$authToken');
     try{
-    final response= await http
-        .post(
-      url,
+    final response= await http .post(url,
       body: json.encode({
         'title': product.title,
         'description': product.description,
         'imageUrl': product.imageUrl,
         'price': product.price,
-        'isFavorite': product.isfavorite,
+        'creatorId':userId
       }),
     );
       final newProduct = Product(
@@ -102,8 +124,7 @@ catch(error){
       notifyListeners();
     }
     catch (error){
-      print(error);
-      rethrow;
+      throw (error);
     }
     
     
@@ -173,7 +194,7 @@ catch(error){
 final productIndx=_items.indexWhere((element) => element.id==id);
 
 if (productIndx>=0) {
-    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products/$id.json');
+    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products/$id.json?auth=$authToken');
 
    await http
         .patch(
@@ -194,7 +215,7 @@ if (productIndx>=0) {
 }
  }
   Future<void> deleteProduct(String id) async {
-    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products/$id.json');
+    final url =Uri.parse('https://shopapp-99ffc-default-rtdb.firebaseio.com/Products/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
